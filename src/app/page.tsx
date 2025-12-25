@@ -69,7 +69,6 @@ export default function HomePage() {
             <li>本实验共180个学习步骤</li>
             <li>预计耗时45-60分钟</li>
             <li>请在安静环境下完成</li>
-            <li>中途可暂停，下次登录可继续</li>
           </ul>
         </div>
 
