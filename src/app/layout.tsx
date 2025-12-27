@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: '词汇学习实验系统',
-  description: 'Massed Learning vs Spaced Learning 词汇习得效果研究',
+  title: 'Massed Learning vs Spaced Learning',
+  description: 'Massed Learning vs Spaced Learning',
 }
 
 export default function RootLayout({

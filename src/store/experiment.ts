@@ -12,7 +12,7 @@ interface ExperimentState {
   responses: Response[];
   
   // Actions
-  login: (participantCode: string, studentName: string) => void;
+  login: (participantCode: string, studentName: string) => Promise<void>;
   logout: () => void;
   addResponse: (response: Omit<Response, 'id'>) => void;
   nextTrial: () => void;
@@ -39,27 +39,11 @@ export const useExperimentStore = create<ExperimentState>()((set, get) => ({
       .from('project11_participants')
       .select('*')
       .eq('participant_code', participantCode)
-      .eq('status', 'in_progress')
       .single();
 
     if (existing) {
-      // 恢复进度
-      set({
-        participant: {
-          id: existing.id,
-          participantCode: existing.participant_code,
-          studentName: existing.student_name || studentName,
-          testType: existing.test_type as TestType,
-          sessionId: existing.id,
-          startedAt: new Date(existing.started_at),
-          completedAt: existing.completed_at ? new Date(existing.completed_at) : null,
-          currentTrialIndex: existing.current_trial_index,
-          status: existing.status as ParticipantStatus,
-          isWarmupCompleted: existing.is_warmup_completed || false,
-        },
-        responses: [],
-      });
-      return;
+      // 用户已存在，拒绝登录
+      throw new Error('既に登録済みのユーザーです。別のユーザーをご使用ください。');
     }
 
     // 创建新参与者

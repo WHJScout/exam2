@@ -54,7 +54,8 @@ export default function HomePage() {
       // 跳转到答题页面
       router.push('/trial');
     } catch (err) {
-      setError('エラーが発生しました。もう一度お試しください。');
+      const errorMessage = err instanceof Error ? err.message : 'エラーが発生しました。もう一度お試しください。';
+      setError(errorMessage);
       setIsLoading(false);
     }
   };
@@ -63,11 +64,11 @@ export default function HomePage() {
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-4xl mx-auto">
         {/* 标题 */}
-        <h1 className="text-3xl font-bold mb-8">Vocabulary Learning Project</h1>
+        <h1 className="text-3xl font-bold mb-8 font-en">Vocabulary Learning Project</h1>
 
         {/* 説明 */}
         <div className="bg-white rounded-lg p-6 mb-6 shadow">
-          <ol className="list-decimal list-inside space-y-2 text-gray-800">
+          <ol className="list-decimal list-inside space-y-2 text-gray-800 font-ja">
             <li>これからいくつかの英語の文が提示されます。</li>
             <li>文中のかっこ「（ ）」内の単語の意味を推測し、解答欄に入力してください。</li>
             <li>推測の後に正しい意味が提示されます。単語とその意味をしっかり覚えてください。終了後に語彙テストがあります。</li>
@@ -80,7 +81,7 @@ export default function HomePage() {
 
         {/* 注意事項 */}
         <div className="bg-white rounded-lg p-6 mb-6 shadow">
-          <ul className="list-disc list-inside space-y-2 text-gray-800">
+          <ul className="list-disc list-inside space-y-2 text-gray-800 font-ja">
             <li>研究実施中は研究に集中し、携帯電話は電源を切るか通知が来ない設定にしてカバンにしまってください。</li>
             <li>解答中はページを離れないようにしてください。</li>
             <li>「スタート」をクリックして開始してください。</li>
@@ -92,7 +93,7 @@ export default function HomePage() {
           <div className="flex items-center gap-4 mb-4">
             <label 
               htmlFor="participantCode" 
-              className="text-gray-800 whitespace-nowrap"
+              className="text-gray-800 whitespace-nowrap font-ja"
             >
               参加者番号（半角数字で入力）
             </label>
@@ -105,7 +106,7 @@ export default function HomePage() {
                 setError('');
               }}
               placeholder="例：001"
-              className="flex-1 px-3 py-2 border border-gray-300 rounded
+              className="flex-1 px-3 py-2 border border-gray-300 rounded font-ja
                          focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               autoComplete="off"
               autoFocus
@@ -115,7 +116,7 @@ export default function HomePage() {
           <div className="flex items-center gap-4 mb-6">
             <label 
               htmlFor="participantName" 
-              className="text-gray-800 whitespace-nowrap"
+              className="text-gray-800 whitespace-nowrap font-ja"
             >
               名前（漢字で入力）
             </label>
@@ -128,20 +129,20 @@ export default function HomePage() {
                 setError('');
               }}
               placeholder="例：広島太郎"
-              className="flex-1 px-3 py-2 border border-gray-300 rounded
+              className="flex-1 px-3 py-2 border border-gray-300 rounded font-ja
                          focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               autoComplete="off"
             />
           </div>
 
           {error && (
-            <p className="mb-4 text-sm text-red-600">{error}</p>
+            <p className="mb-4 text-sm text-red-600 font-ja">{error}</p>
           )}
 
           <button
             type="submit"
             disabled={isLoading}
-            className="px-6 py-2 bg-blue-600 text-white rounded
+            className="px-6 py-2 bg-blue-600 text-white rounded font-ja
                        hover:bg-blue-700 focus:ring-2 focus:ring-blue-300
                        disabled:bg-gray-400 disabled:cursor-not-allowed"
           >

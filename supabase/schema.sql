@@ -91,9 +91,12 @@ CREATE INDEX idx_project11_responses_order_num ON project11_responses(order_num)
 -- 导出视图 (project11_export_responses)
 -- 用于导出学生答题记录，包含所有必需字段
 -- =====================================================
+DROP VIEW IF EXISTS project11_export_responses CASCADE;
+
 CREATE VIEW project11_export_responses AS
 SELECT 
-    p.id AS student_id,                   -- 新增：学生ID（用于区分重名学生）
+    p.participant_code AS student_no,     -- 学生编号
+    p.student_name,                       -- 学生姓名
     p.test_type,                          -- test类型
     r.order_num,                          -- 顺序
     r.condition,                          -- massed/spaced
@@ -103,7 +106,6 @@ SELECT
     r.theme,                              -- 主题
     r.sub_order,                          -- 子顺序
     r.notes,                              -- 备注
-    p.participant_code AS student_no,     -- 学生编号
     r.answer_text,                        -- 学生答案
     r.is_warmup,                          -- 是否为热身题
     r.trial_index,                        -- 全局顺序
@@ -113,6 +115,7 @@ SELECT
     r.is_submitted_by_timeout,            -- 是否超时
     r.shown_at,                           -- 显示时间
     r.submitted_at,                       -- 提交时间
+    p.id AS student_id,                   -- 新增：学生ID（用于区分重名学生）
     r.response_time_ms                    -- 反应时间（毫秒）
 FROM project11_responses r
 JOIN project11_participants p ON r.participant_id = p.id

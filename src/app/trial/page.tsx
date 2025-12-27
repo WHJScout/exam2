@@ -346,9 +346,9 @@ export default function TrialPage() {
   }, [phase, currentTrialIndex, saveResponse]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && phase === 'guess') {
+    // 禁用回车键提交，防止用户自行控制前进
+    if (e.key === 'Enter') {
       e.preventDefault();
-      handleSubmit();
     }
   };
 
@@ -374,17 +374,31 @@ export default function TrialPage() {
   // 高亮句子中的目标词
   const renderSentence = () => {
     const text = trial.sentence;
-    const wordPattern = new RegExp(`\\(${trial.word}\\)`, 'g');
-    const parts = text.split(wordPattern);
+    // 使用正则表达式匹配括号中的单词，支持单复数等变化形式
+    // 转义特殊字符并添加可选的s或其他常见词尾
+    const escapedWord = trial.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const wordPattern = new RegExp(`\\((${escapedWord}s?)\\)`, 'gi');
+    
+    const parts: string[] = [];
+    const matches: string[] = [];
+    let lastIndex = 0;
+    let match;
+    
+    while ((match = wordPattern.exec(text)) !== null) {
+      parts.push(text.substring(lastIndex, match.index));
+      matches.push(match[1]); // 保存实际匹配到的单词（可能是复数形式）
+      lastIndex = match.index + match[0].length;
+    }
+    parts.push(text.substring(lastIndex));
     
     return (
       <p className="text-xl leading-relaxed text-gray-800 font-english">
         {parts.map((part, index) => (
           <span key={index}>
             {part}
-            {index < parts.length - 1 && (
+            {index < matches.length && (
               <span className="font-bold text-blue-600 bg-blue-100 px-1 rounded">
-                ({trial.word})
+                ({matches[index]})
               </span>
             )}
           </span>
@@ -401,16 +415,16 @@ export default function TrialPage() {
           <div className="flex items-center justify-between mb-2">
             {/* 前5题是热身，不显示进度；正式题显示進捗状況 */}
             {!progressInfo.isWarmup && (
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-600 font-ja">
                 進捗状況 {currentTrialIndex - 4}/100
               </span>
             )}
             {progressInfo.isWarmup && <span />}
             <div className="text-sm text-gray-600 text-right">
-              <div className="font-mono font-bold text-base mb-1">
+              <div className="font-mono font-bold text-base mb-1 font-ja">
                 残り時間 {timeLeft}秒
               </div>
-              <div className="text-xs">
+              <div className="text-xs font-ja">
                 残り時間が終了すると、自動的に次のページへ進みます。
               </div>
             </div>
@@ -425,10 +439,10 @@ export default function TrialPage() {
             <>
               {/* 第5次呈现：只显示句子和释义，不需要作答 */}
               <div className="space-y-6">
-                <p className="text-center text-gray-700 mb-4">
+                <p className="text-center text-gray-700 mb-4 font-ja">
                   今回は解答は不要で、文と単語の意味のみが表示されます。
                 </p>
-                <p className="text-center text-gray-700 mb-6">
+                <p className="text-center text-gray-700 mb-6 font-ja">
                   この単語とその意味をしっかり覚えてください。終了後に語彙テストがあります。
                 </p>
                 
@@ -437,7 +451,7 @@ export default function TrialPage() {
                 </div>
                 
                 <div className="py-4 text-center">
-                  <p className="text-2xl font-bold text-blue-600">
+                  <p className="text-2xl font-bold text-blue-600 font-ja">
                     {trial.meaning}
                   </p>
                 </div>
@@ -454,17 +468,17 @@ export default function TrialPage() {
 
                 {/* 指示文案 */}
                 <div className="text-center space-y-2">
-                  <p className="text-lg text-gray-700">
+                  <p className="text-lg text-gray-700 font-ja">
                     「（ ）」内の単語の意味を推測し、解答欄に入力してください。
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 font-ja">
                     解答は日本語でも英語でも構いません。
                   </p>
                 </div>
 
                 {/* 输入区域 */}
                 <div className="w-full max-w-md mx-auto">
-                  <label className="block mb-2 text-sm font-medium text-gray-700">
+                  <label className="block mb-2 text-sm font-medium text-gray-700 font-ja">
                     解答欄
                   </label>
                   <input
@@ -473,7 +487,7 @@ export default function TrialPage() {
                     onChange={(e) => setAnswer(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder=""
-                    className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg 
+                    className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg font-ja
                                focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     autoComplete="off"
                     autoFocus
@@ -485,7 +499,7 @@ export default function TrialPage() {
             <>
               {/* Feedback 阶段 */}
               <div className="space-y-6">
-                <p className="text-center text-gray-700">
+                <p className="text-center text-gray-700 font-ja">
                   この単語とその意味をしっかり覚えてください。終了後に語彙テストがあります。
                 </p>
                 
@@ -494,7 +508,7 @@ export default function TrialPage() {
                 </div>
                 
                 <div className="py-4 text-center">
-                  <p className="text-2xl font-bold text-green-600">
+                  <p className="text-2xl font-bold text-green-600 font-ja">
                     {trial.meaning}
                   </p>
                 </div>
@@ -506,7 +520,7 @@ export default function TrialPage() {
         {/* 热身阶段显示"練習"文本 */}
         {progressInfo.isWarmup && (
           <div className="text-center mt-6">
-            <p className="text-xl font-bold text-gray-600">練習</p>
+            <p className="text-xl font-bold text-gray-600 font-ja">練習</p>
           </div>
         )}
       </main>
