@@ -6,6 +6,7 @@ import { useExperimentStore } from '@/store/experiment';
 
 export default function HomePage() {
   const [participantCode, setParticipantCode] = useState('');
+  const [studentName, setStudentName] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -22,64 +23,78 @@ export default function HomePage() {
     e.preventDefault();
     
     const code = participantCode.trim();
+    const name = studentName.trim();
     
     if (!code) {
-      setError('请输入参与者编号');
+      setError('参加者番号を入力してください');
       return;
     }
 
-    // 简单验证：至少3个字符
-    if (code.length < 3) {
-      setError('参与者编号至少3个字符');
+    // 验证编号格式：只允许 001-040
+    const num = parseInt(code);
+    if (isNaN(num) || num < 1 || num > 40) {
+      setError('参加者番号は001～040の範囲内である必要があります');
       return;
     }
 
+    // 确保是3位数格式（例：001）
+    const formattedCode = String(num).padStart(3, '0');
+
+    if (!name) {
+      setError('名前を入力してください');
+      return;
+    }
+
+    setIsLoading(true);
+    
     try {
-      setIsLoading(true);
-      setError('');
+      // 登录并保存学生姓名
+      await login(formattedCode, name);
       
-      // 等待登录完成
-      await login(code);
-      
-      // 登录成功后跳转
+      // 跳转到答题页面
       router.push('/trial');
     } catch (err) {
-      console.error('登录失败:', err);
-      setError('登录失败，请检查网络连接或联系管理员');
+      setError('エラーが発生しました。もう一度お試しください。');
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md animate-fadeIn">
-        {/* Logo/标题 */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl text-white">📚</span>
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900">词汇学习实验系统</h1>
-          <p className="text-gray-500 mt-2">Vocabulary Learning Experiment</p>
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="max-w-4xl mx-auto">
+        {/* 标题 */}
+        <h1 className="text-3xl font-bold mb-8">Vocabulary Learning Project</h1>
+
+        {/* 説明 */}
+        <div className="bg-white rounded-lg p-6 mb-6 shadow">
+          <ol className="list-decimal list-inside space-y-2 text-gray-800">
+            <li>これからいくつかの英語の文が提示されます。</li>
+            <li>文中のかっこ「（ ）」内の単語の意味を推測し、解答欄に入力してください。</li>
+            <li>推測の後に正しい意味が提示されます。単語とその意味をしっかり覚えてください。終了後に語彙テストがあります。</li>
+            <li>所要時間は約45分です。</li>
+          </ol>
         </div>
 
-        {/* 说明 */}
-        <div className="bg-blue-50 rounded-lg p-4 mb-6 text-sm text-blue-800">
-          <p className="font-medium mb-2">📋 实验说明：</p>
-          <ul className="list-disc list-inside space-y-1 text-blue-700">
-            <li>本实验共180个学习步骤</li>
-            <li>预计耗时45-60分钟</li>
-            <li>请在安静环境下完成</li>
+        {/* 分割線 */}
+        <hr className="my-6 border-gray-300" />
+
+        {/* 注意事項 */}
+        <div className="bg-white rounded-lg p-6 mb-6 shadow">
+          <ul className="list-disc list-inside space-y-2 text-gray-800">
+            <li>研究実施中は研究に集中し、携帯電話は電源を切るか通知が来ない設定にしてカバンにしまってください。</li>
+            <li>解答中はページを離れないようにしてください。</li>
+            <li>「スタート」をクリックして開始してください。</li>
           </ul>
         </div>
 
         {/* 登录表单 */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+        <form onSubmit={handleSubmit} className="bg-white rounded-lg p-6 shadow">
+          <div className="flex items-center gap-4 mb-4">
             <label 
               htmlFor="participantCode" 
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="text-gray-800 whitespace-nowrap"
             >
-              参与者编号
+              参加者番号（半角数字で入力）
             </label>
             <input
               id="participantCode"
@@ -89,34 +104,50 @@ export default function HomePage() {
                 setParticipantCode(e.target.value);
                 setError('');
               }}
-              placeholder="例如：STU001"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg 
-                         focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                         text-lg"
+              placeholder="例：001"
+              className="flex-1 px-3 py-2 border border-gray-300 rounded
+                         focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               autoComplete="off"
               autoFocus
             />
-            {error && (
-              <p className="mt-2 text-sm text-red-600">{error}</p>
-            )}
           </div>
+
+          <div className="flex items-center gap-4 mb-6">
+            <label 
+              htmlFor="participantName" 
+              className="text-gray-800 whitespace-nowrap"
+            >
+              名前（漢字で入力）
+            </label>
+            <input
+              id="participantName"
+              type="text"
+              value={studentName}
+              onChange={(e) => {
+                setStudentName(e.target.value);
+                setError('');
+              }}
+              placeholder="例：広島太郎"
+              className="flex-1 px-3 py-2 border border-gray-300 rounded
+                         focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              autoComplete="off"
+            />
+          </div>
+
+          {error && (
+            <p className="mb-4 text-sm text-red-600">{error}</p>
+          )}
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 bg-blue-600 text-white font-medium rounded-lg
-                       hover:bg-blue-700 focus:ring-4 focus:ring-blue-300
-                       disabled:bg-gray-400 disabled:cursor-not-allowed
-                       transition-colors text-lg"
+            className="px-6 py-2 bg-blue-600 text-white rounded
+                       hover:bg-blue-700 focus:ring-2 focus:ring-blue-300
+                       disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            {isLoading ? '正在登录...' : '开始实验'}
+            {isLoading ? '読み込み中...' : 'スタート'}
           </button>
         </form>
-
-        {/* 底部信息 */}
-        <p className="mt-6 text-center text-xs text-gray-400">
-          如有问题，请联系实验管理员
-        </p>
       </div>
     </div>
   );

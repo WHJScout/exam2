@@ -4,7 +4,12 @@
 
 /* 自定义样式 */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'MS PGothic', 'MS Gothic', sans-serif;
+}
+
+/* 英文文本使用 Arial */
+.font-english {
+  font-family: Arial, sans-serif;
 }
 
 /* 动画 */

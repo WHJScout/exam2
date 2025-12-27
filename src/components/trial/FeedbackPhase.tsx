@@ -68,22 +68,13 @@ export function FeedbackPhase({ trial, participantId, onComplete }: FeedbackPhas
   };
 
   return (
-    <div className="flex flex-col items-center gap-8 p-8 max-w-3xl mx-auto">
-      {/* 标题 */}
+    <div className="flex flex-col gap-6 p-8 max-w-3xl mx-auto">
+      {/* 提示文案 */}
       <div className="text-center">
-        <span className="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium mb-2">
-          第 {trial.exposureIndex} 次学习 - 正确答案
-        </span>
-        <h2 className="text-2xl font-bold text-gray-900">
-          反馈阶段：<span className="text-green-600">{trial.word.wordText}</span>
-        </h2>
+        <p className="text-lg text-gray-700">
+          この単語とその意味をしっかり覚えてください。終了後に語彙テストがあります。
+        </p>
       </div>
-
-      {/* 倒计时 */}
-      <CountdownTimer 
-        duration={trial.durationSeconds} 
-        onComplete={handleComplete} 
-      />
 
       {/* 句子展示 */}
       <div className="w-full bg-gray-50 rounded-lg p-6 border border-gray-200">
@@ -95,7 +86,6 @@ export function FeedbackPhase({ trial, participantId, onComplete }: FeedbackPhas
         <div className="flex items-center gap-3">
           <span className="text-3xl">✓</span>
           <div>
-            <p className="text-lg font-medium text-gray-700">意思：</p>
             <p className="text-2xl font-bold text-green-700">
               {trial.word.correctMeaning}；{trial.word.chineseMeaning}
             </p>
@@ -103,10 +93,11 @@ export function FeedbackPhase({ trial, participantId, onComplete }: FeedbackPhas
         </div>
       </div>
 
-      {/* 提示 */}
-      <p className="text-sm text-gray-500">
-        📖 请认真记忆这个词汇，{trial.durationSeconds}秒后自动进入下一题
-      </p>
+      {/* 倒计时 */}
+      <CountdownTimer 
+        duration={trial.durationSeconds} 
+        onComplete={handleComplete} 
+      />
     </div>
   );
 }

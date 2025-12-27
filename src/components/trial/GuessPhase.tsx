@@ -84,32 +84,26 @@ export function GuessPhase({ trial, participantId, onComplete }: GuessPhaseProps
   };
 
   return (
-    <div className="flex flex-col items-center gap-8 p-8 max-w-3xl mx-auto">
-      {/* 标题 */}
-      <div className="text-center">
-        <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-2">
-          第 {trial.exposureIndex} 次学习
-        </span>
-        <h2 className="text-2xl font-bold text-gray-900">
-          猜测阶段：<span className="text-blue-600">{trial.word.wordText}</span>
-        </h2>
-      </div>
-
-      {/* 倒计时 */}
-      <CountdownTimer 
-        duration={trial.durationSeconds} 
-        onComplete={() => handleSubmit(true)} 
-      />
-
+    <div className="flex flex-col gap-6 p-8 max-w-3xl mx-auto">
       {/* 句子展示 */}
       <div className="w-full bg-gray-50 rounded-lg p-6 border border-gray-200">
         {renderSentence()}
       </div>
 
+      {/* 指示文案 */}
+      <div className="text-center space-y-2">
+        <p className="text-lg text-gray-700">
+          「（ ）」内の単語の意味を推測し、解答欄に入力してください。
+        </p>
+        <p className="text-sm text-gray-600">
+          解答は日本語で記入しても、英語で記入しても、どちらでも構いません。
+        </p>
+      </div>
+
       {/* 输入区域 */}
-      <div className="w-full max-w-md">
-        <label className="block mb-2 text-lg font-medium text-gray-700">
-          你认为 <span className="text-blue-600 font-bold">{trial.word.wordText}</span> 的意思是：
+      <div className="w-full max-w-md mx-auto">
+        <label className="block mb-2 text-sm font-medium text-gray-700">
+          解答欄
         </label>
         <input
           ref={inputRef}
@@ -117,7 +111,7 @@ export function GuessPhase({ trial, participantId, onComplete }: GuessPhaseProps
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="请输入你的答案..."
+          placeholder=""
           disabled={isSubmitting}
           className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg 
                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500
@@ -126,10 +120,11 @@ export function GuessPhase({ trial, participantId, onComplete }: GuessPhaseProps
         />
       </div>
 
-      {/* 提示 */}
-      <p className="text-sm text-gray-500">
-        💡 按 Enter 键快速提交，或等待倒计时结束自动进入下一题
-      </p>
+      {/* 倒计时 */}
+      <CountdownTimer 
+        duration={trial.durationSeconds} 
+        onComplete={() => handleSubmit(true)} 
+      />
     </div>
   );
 }

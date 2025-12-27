@@ -12,6 +12,11 @@ const config: Config = {
         primary: '#3b82f6',
         secondary: '#8b5cf6',
       },
+      fontFamily: {
+        'sans': ['Arial', 'Hiragino Kaku Gothic ProN', 'Meiryo', 'sans-serif'],
+        'en': ['Arial', 'sans-serif'],
+        'ja': ['Hiragino Kaku Gothic ProN', 'Meiryo', 'MS PGothic', 'sans-serif'],
+      },
     },
   },
   plugins: [],

@@ -9,6 +9,23 @@ export type Phase = 'guess' | 'feedback' | 'review';
 // 参与者状态
 export type ParticipantStatus = 'in_progress' | 'completed' | 'abandoned';
 
+// Test类型
+export type TestType = 'warmup' | 'test1' | 'test2' | 'test3' | 'test4';
+
+// Trial项
+export interface TrialItem {
+  testType: TestType;
+  order: number;
+  condition: Condition;
+  word: string;
+  meaning: string;
+  sentence: string;
+  theme: string;
+  subOrder: number; // 1-5
+  notes: string; // 备注
+  isWarmup: boolean;
+}
+
 // 词汇
 export interface Word {
   id: number;
@@ -43,11 +60,14 @@ export interface ScheduleTrial {
 export interface Participant {
   id: string;
   participantCode: string;
+  studentName: string; // 新增：学生姓名
+  testType: TestType; // 新增：分配的测试类型
   sessionId: string;
   startedAt: Date;
   completedAt: Date | null;
   currentTrialIndex: number;
   status: ParticipantStatus;
+  isWarmupCompleted: boolean; // 新增：是否完成热身
 }
 
 // 答题记录
@@ -58,6 +78,7 @@ export interface Response {
   trialIndex: number;
   wordId: number;
   wordText: string;
+  order: number; // 新增：题目顺序
   condition: Condition;
   conditionLabel: string; // massed1, spaced3 等
   exposureIndex: number;
@@ -67,6 +88,13 @@ export interface Response {
   correctAnswer: string;
   isCorrect: boolean | null;
   isSubmittedByTimeout: boolean;
+  theme: string; // 新增：主题
+  subOrder: number; // 新增：子顺序
+  notes: string; // 新增：备注
+  isWarmup: boolean; // 新增：是否为热身题
+  testType: TestType; // 新增：测试类型
+  studentName: string; // 新增：学生姓名
+  studentNo: string; // 新增：学生编号
   shownAt: Date;
   submittedAt: Date | null;
   responseTimeMs: number | null;
