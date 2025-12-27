@@ -2,7 +2,7 @@
 // 设置 DEV_MODE = true 启用开发模式（快速倒计时）
 // 设置 DEV_MODE = false 使用正式时间
 
-export const DEV_MODE = true; // 上线前改为 false
+export const DEV_MODE = false; // 上线前改为 false
 
 // 倒计时时间配置（秒）
 export const TIMING = {
