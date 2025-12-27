@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 自定义样式 */
+body {
+  font-family: 'MS PGothic', 'MS Gothic', sans-serif;
+}
+
+/* 英文文本使用 Arial */
+.font-english {
+  font-family: Arial, sans-serif;
+}
+
+/* 动画 */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* 输入框聚焦效果 */
+input:focus {
+  outline: none;
+}
+
+/* 禁用文本选择（实验期间） */
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
