@@ -13,9 +13,9 @@ const config: Config = {
         secondary: '#8b5cf6',
       },
       fontFamily: {
-        'sans': ['MS PGothic', 'MS Gothic', 'Hiragino Kaku Gothic ProN', 'Meiryo', 'sans-serif'],
+        'sans': ['MS Gothic', 'MS UI Gothic', 'Hiragino Sans', 'sans-serif'],
         'en': ['Arial', 'sans-serif'],
-        'ja': ['MS PGothic', 'MS Gothic', 'Hiragino Kaku Gothic ProN', 'Meiryo', 'sans-serif'],
+        'ja': ['MS Gothic', 'MS UI Gothic', 'Hiragino Sans', 'sans-serif'],
       },
     },
   },
